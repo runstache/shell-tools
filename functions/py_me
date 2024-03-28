@@ -1,7 +1,6 @@
 function py_me (){
 
     local pipaction="$1"
-    local pipparam="$2"
 
     if [[ $pipaction == 'rm' ]]; then;
         echo 'Removing Virtual Environment'
@@ -9,23 +8,22 @@ function py_me (){
         return
     fi
 
-    if [[ $pipaction == 'activate']]; then;
+    if [[ $pipaction == 'activate' ]]; then;
         echo 'Activating Environment'
         source ./.venv/bin/activate
         return
     fi
 
 
-    if [ $# -lt 2 ]; then;
+    if [[ $# -lt 2 ]]; then;
         pyenv exec pipenv $1 --dev
         chmod +x ./.venv/bin/activate
         source ./.venv/bin/activate
         pip install pipenv
         return
-
     fi
     
-    if [ $# -eq 2]; then;
+    if [[ $# -eq 2 ]]; then;
         pyenv exec pipenv $1 --python $2 --dev
         chmod +x ./.venv/bin/activate
         source ./.venv/bin/activate
