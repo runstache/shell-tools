@@ -73,7 +73,7 @@ function aws_connect {
 
   if ($aws_command -eq "login") {
       Write-Host -ForegroundColor White 'Refreshing AWS SSO Connection'
-      aws sso login --profile de-prd
+      aws sso login --profile $env:AWS_CONNECT_PROFILE
       return
   }
 
