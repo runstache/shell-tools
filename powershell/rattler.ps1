@@ -22,7 +22,7 @@ function installSca() {
   }
 
   Write-Host -ForegroundColor White 'Installing Dev Testing Tools'
-  pipenv install --dev pytest pytest-cov assertpy checkov mypy pyflakes pylint pycodestyle bandit
+  pipenv install --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit
   pipenv install sbom-html --dev --index=artifactory
 }
 
@@ -82,7 +82,7 @@ function run_sca {
 
 function py_me_help() {
   Write-Host @"
-The following Operations are available through the py_me commandlet:
+The following Operations are available through the pytool commandlet:
 
 - install: Creates a new Pipfile and .env file if they do not exist. If they are present, the dependencies are installed for the provided python version. The value `"sca`" can also be used
 for the python version and all Static Code Analysis dependencies will be installed.
@@ -102,7 +102,7 @@ for the python version and all Static Code Analysis dependencies will be install
 }
  
 
-function py_me {
+function rattler {
   param(
       [ValidateSet("sca", "coverage", "activate", "rm", "install", "sync", "help")]$pipcommand,
       $pyversion

@@ -1,6 +1,6 @@
-# PyMe ZShell Tool
+# Rattler ZShell Tool
 
-The PyMe Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects in ZShell.
+The Rattler Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects in ZShell.
 
 ## Install / Sync
 
@@ -27,37 +27,37 @@ When passing the Python Version number, the virtual environment will be created 
 * assertpy
 * checkov
 
-Additional parameters are available for the __py_me__ command:
+Additional parameters are available for the __rattler__ command:
 
 ```command
 # Install New Environment
-py_me install
+rattler install
 
 # Install New Environment for Python 3.11.7
-py_me install 3.11.7
+rattler install 3.11.7
 
 # Sync New Environment
-py_me sync
+rattler sync
 
 # Sync new Environment for Python 3.11.7
-py_me sync 3.11.7
+rattler sync 3.11.7
 
 # Install Static Code Analysis and Testing Packages
-py_me install sca
+rattler install sca
 
 # Activate Virtual Environment
-py_me activate
+rattler activate
 
 # Run Pytest with Code Coverage Report
-py_me coverage
+rattler coverage
 
 # Run Static Code Analysis
-py_me sca
+rattler sca
 
 # Remove Virtual Environment
-py_me rm
+rattler rm
 
 # Print Help Text
-py_me help
+rattler help
 
 ```

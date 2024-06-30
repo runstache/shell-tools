@@ -58,9 +58,9 @@ The __bastions.json__ file contains entries in the following format:
 
 Multiple Bastions can be configured in the file as new Key/Value pairs at the root level. Each Key at the root level is used for the Listing of Bastions and the connection.
 
-## PyMe
+## Rattler
 
-The PyMe Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects.
+The Rattler Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects.
 
 ## Install / Sync
 
@@ -94,33 +94,33 @@ Additional parameters are available for the __py_me__ command:
 
 ```command
 # Install New Environment
-py_me install
+rattler install
 
 # Install New Environment for Python 3.11.7
-py_me install 3.11.7
+rattler install 3.11.7
 
 # Sync New Environment
-py_me sync
+rattler sync
 
 # Sync new Environment for Python 3.11.7
-py_me sync 3.11.7
+rattler sync 3.11.7
 
 # Install Static Code Analysis and Testing Packages
-py_me install sca
+rattler install sca
 
 # Activate Virtual Environment
-py_me activate
+rattler activate
 
 # Run Pytest with Code Coverage Report
-py_me coverage
+rattler coverage
 
 # Run Static Code Analysis
-py_me sca
+rattler sca
 
 # Remove Virtual Environment
-py_me rm
+rattler rm
 
 # Print Help Text
-py_me help
+rattler help
 
 ```
