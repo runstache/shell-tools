@@ -1,6 +1,6 @@
 # Rattler ZShell Tool
 
-The Rattler Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects in ZShell.
+The Rattler Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects in ZShell. Unlike the Windws version, 3rd Party python repositories are not supported automatically.
 
 ## Install / Sync
 
@@ -25,7 +25,6 @@ When passing the Python Version number, the virtual environment will be created 
 * pycodestyle
 * bandit
 * assertpy
-* checkov
 
 Additional parameters are available for the __rattler__ command:
 

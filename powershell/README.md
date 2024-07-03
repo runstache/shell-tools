@@ -9,6 +9,12 @@ The AWS Connect Powershell Utility contains shortend commands for the following 
 * Performing an AWS SSO Login
 * Connecting to Bastion Instances through AWS SSM
 
+### AWS Connect Environment Variables
+
+The utility requires the following Environment Variables to be set:
+
+* AWS_CONNECT_PROFILE - Default AWS Profile to use for SSO Login commands
+
 ### AWS Connect Login
 
 The Login command will perform an AWS SSO Login for the profile defined in the AWS_CONNECT_PROFILE environment variable.
@@ -61,6 +67,14 @@ Multiple Bastions can be configured in the file as new Key/Value pairs at the ro
 ## Rattler
 
 The Rattler Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects.
+
+### Rattler Environment Variables
+
+The utility leverages the following environment variables:
+
+* MAVEN_REPO_USER - 3rd Party Repository User
+* MAVEN_REPO_PASS - 3rd Party Repository Password
+* ARTIFACTORY_URL - Base URL to 3rd Party repositories. If not set, the source will not be created in any newly created Pipfiles. Also a .env file will not be added to the root.
 
 ## Install / Sync
 

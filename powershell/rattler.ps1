@@ -149,14 +149,22 @@ MAVEN_REPO_PASS=`"$env:MAVEN_REPO_PASS`"
 "@
 
 
-  $start_pip_file = "[[source]]`r`nurl = `"https://pypi.python.org/simple`"`r`nverify_ssl = true`r`nname = `"pypi`"`r`n`r`n" +
+  if ($env:ARTIFACTORY_URL) {
+    $start_pip_file = "[[source]]`r`nurl = `"https://pypi.python.org/simple`"`r`nverify_ssl = true`r`nname = `"pypi`"`r`n`r`n" +
   "[[source]]`r`nurl = `"https://`$MAVEN_REPO_USER:`${MAVEN_REPO_PASS}@$env:ARTIFACTORY_URL`"`r`nverify_ssl = true`r`nname = `"artifactory`"`r`n`r`n" +
   "[packages]`r`n`r`n" +
   "[dev-packages]`r`n`r`n"
+  } else {
+    $start_pip_file = "[[source]]`r`nurl = `"https://pypi.python.org/simple`"`r`nverify_ssl = true`r`nname = `"pypi`"`r`n`r`n" +    
+    "[packages]`r`n`r`n" +
+    "[dev-packages]`r`n`r`n"
+  }
 
   
   if (!(Test-Path ".\.env")) {
-      Out-File -FilePath ".\.env" -InputObject $env_file
+      if ($env:ARTIFACTORY_URL) {
+        Out-File -FilePath ".\.env" -InputObject $env_file
+      }
   }
   else {
       Write-Host -ForegroundColor Red "Environment File Exists."
