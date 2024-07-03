@@ -1,25 +1,72 @@
 function getCredentials($aws_profile) {
   $creds = aws configure export-credentials --profile $aws_profile
   if ($creds -match "error") {
-      Write-Error "Invalid or expired SSO session."
-      return
+    Write-Error "Invalid or expired SSO session, attempting re-login"
+    aws sso login --profile $env:AWS_CONNECT_PROFILE
+    if ($(aws configure export-credentials --profile $aws_profile) -match "error") {
+      Write-Error "Unable to refresh SSO session."
+      Exit
+    }    
   }
 
   $aws_creds = (aws configure export-credentials --profile $aws_profile | ConvertFrom-Json)
   $access_key = $aws_creds.AccessKeyId
   $secret_key = $aws_creds.SecretAccessKey
   $token = $aws_creds.SessionToken
+  $expiration = $aws_creds.Expiration
 
 
   $TempFile = (Join-Path $ENV:USERPROFILE "temp.html")
 
+  $expiration_script = ""
+
+  if ($expiration) {
+
+    $expiration_script = @"
+var countDownDate = new Date("$expiration").getTime();
+
+var x = setInterval(function() {
+
+  var now = new Date().getTime();
+  var tdelta = countDownDate - now;
+
+  // Time calculations for days, hours, minutes and seconds
+  var hours = Math.floor(tdelta / (1000 * 60 * 60));
+  var minutes = Math.floor((tdelta % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((tdelta % (1000 * 60)) / 1000);
+
+  document.getElementById("expire").innerHTML = "Expires in: " + hours.toString().padStart(2, "0") + ":"
+  + minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+
+  // If the count down is finished, write some text
+  if (tdelta < 0) {
+    clearInterval(x);
+    document.getElementById("expire").innerHTML = "EXPIRED";
+  }
+}, 1000);
+
+"@
+
+  }
+
+
   Write-Output @"
 <html>
+<style>
+h1 {
+  font-family: verdana;
+}
+p {
+  font-family: courier;
+  font-weight: bold;
+}
+</style>
 <script>
-
+$expiration_script
 </script>
 <body>
-  <h2>$aws_profile</h2>
+  <h1>$aws_profile</h1>
+  <p id="expire"></p>
   <table>
       <tr>
           <td><button type="button" id="copy_key_name" onclick="navigator.clipboard.writeText('AWS_ACCESS_KEY_ID')">AWS_ACCESS_KEY_ID</button></td>
@@ -56,7 +103,7 @@ function loadBastion($name) {
 
   $config = Get-Content "$ENV:USERPROFILE\.aws\bastions.json" | ConvertFrom-Json
   if ([bool]$config.PSObject.Properties[$name]) {
-      return $config.$name
+    return $config.$name
   }
   return $null
 }
@@ -64,64 +111,64 @@ function loadBastion($name) {
 function aws_connect {
 
   param(
-      [Parameter(Position = 0, ValueFromRemainingArguments)]
-      [String[]]$Parameters
+    [Parameter(Position = 0, ValueFromRemainingArguments)]
+    [String[]]$Parameters
   )
 
   $aws_command = $Parameters[0]
   $aws_profile = $Parameters[1]
 
   if ($aws_command -eq "login") {
-      Write-Host -ForegroundColor White 'Refreshing AWS SSO Connection'
-      aws sso login --profile $env:AWS_CONNECT_PROFILE
-      return
+    Write-Host -ForegroundColor White 'Refreshing AWS SSO Connection'
+    aws sso login --profile $env:AWS_CONNECT_PROFILE
+    return
   }
 
   if ($aws_command -eq "creds") {
-      Write-Host -ForegroundColor White 'Generating AWS Temp Credentials'
-      getCredentials($aws_profile)
-      return
+    Write-Host -ForegroundColor White 'Generating AWS Temp Credentials'
+    getCredentials($aws_profile)
+    return
   }
 
   if ($aws_command -eq "bastion") {
 
 
-      if ($aws_profile -eq "list") {
-          $config = Get-Content "$ENV:USERPROFILE\.aws\bastions.json" | ConvertFrom-Json
-          Write-Host -ForegroundColor White 'Bastions Configured'
-          $config|Get-Member -MemberType NoteProperty|Select-Object Name
-          return
-      }
-
-
-      Write-Host -ForegroundColor White "Connecting to Bastion: $aws_profile"
-      $config = loadBastion($aws_profile)
-      if ($null -eq $config) {
-          Write-Host -ForegroundColor Red 'Bastion Configuration not Found.'
-          return
-      }
-
-      $stack_name=$config.stackName
-      $environment=$config.environment
-      $sourcePort=$config.sourcePort
-      $destinationPort=$config.destinationPort
-      $remoteHost=$config.host
-
-      $filter = @( "Name=tag:aws:cloudformation:stack-name,Values=$stack_name","Name=tag:Environment,Values=$environment" )
-          
-      $hostBastion = aws ec2 describe-instances --filter @filter `
-                                                   --query 'Reservations[*].Instances[*].InstanceId' `
-                                                   --output text `
-                                                   --profile $config.profile
-          
-
-      $parameters = @( "host=$remoteHost","portNumber=$destinationPort","localPortNumber=$sourcePort" )
-      $paramList=$parameters -join ","
-      aws ssm start-session --target $hostBastion `
-                            --document-name AWS-StartPortForwardingSessionToRemoteHost `
-                            --parameters  $paramList `
-                            --profile $config.profile
+    if ($aws_profile -eq "list") {
+      $config = Get-Content "$ENV:USERPROFILE\.aws\bastions.json" | ConvertFrom-Json
+      Write-Host -ForegroundColor White 'Bastions Configured'
+      $config | Get-Member -MemberType NoteProperty | Select-Object Name
       return
+    }
+
+
+    Write-Host -ForegroundColor White "Connecting to Bastion: $aws_profile"
+    $config = loadBastion($aws_profile)
+    if ($null -eq $config) {
+      Write-Host -ForegroundColor Red 'Bastion Configuration not Found.'
+      return
+    }
+
+    $stack_name = $config.stackName
+    $environment = $config.environment
+    $sourcePort = $config.sourcePort
+    $destinationPort = $config.destinationPort
+    $remoteHost = $config.host
+
+    $filter = @( "Name=tag:aws:cloudformation:stack-name,Values=$stack_name", "Name=tag:Environment,Values=$environment" )
+          
+    $hostBastion = aws ec2 describe-instances --filter @filter `
+      --query 'Reservations[*].Instances[*].InstanceId' `
+      --output text `
+      --profile $config.profile
+          
+
+    $parameters = @( "host=$remoteHost", "portNumber=$destinationPort", "localPortNumber=$sourcePort" )
+    $paramList = $parameters -join ","
+    aws ssm start-session --target $hostBastion `
+      --document-name AWS-StartPortForwardingSessionToRemoteHost `
+      --parameters  $paramList `
+      --profile $config.profile
+    return
 
   }
 }
