@@ -111,13 +111,10 @@ function loadBastion($name) {
 function aws_connect {
 
   param(
-    [Parameter(Position = 0, ValueFromRemainingArguments)]
-    [String[]]$Parameters
+    [ValidateSet("login", "bastion", "creds")]$aws_command, $aws_profile  
   )
 
-  $aws_command = $Parameters[0]
-  $aws_profile = $Parameters[1]
-
+  
   if ($aws_command -eq "login") {
     Write-Host -ForegroundColor White 'Refreshing AWS SSO Connection'
     aws sso login --profile $env:AWS_CONNECT_PROFILE
