@@ -21,7 +21,7 @@ function rattler (){
         pylint src/
         pyflakes src/
         pycodestyle src/ --max-line-length 100
-        bandit src/ -c ./pyproject.toml
+        bandit -r src/ -c ./pyproject.toml
         return
     fi
 
