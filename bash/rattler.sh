@@ -3,8 +3,8 @@ function rattler (){
     local pipaction="$1"
     local pyversion="$2"
 
-    if [[$pipaction == 'shortlist']]; then
-        echo install sync rm sca activate coverag
+    if [[ $pipaction == 'shortlist' ]]; then
+        echo install sync rm sca activate coverage
         return
     fi
 

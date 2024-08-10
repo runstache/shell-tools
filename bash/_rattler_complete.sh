@@ -9,4 +9,4 @@ _script()
 
   return 0
 }
-complete -o nospace -F _script ./rattler.sh
+complete -o nospace -F _script $HOME/github/shell-tools/bash/rattler.sh
