@@ -3,6 +3,12 @@ function rattler (){
     local pipaction="$1"
     local pyversion="$2"
 
+    if [[$pipaction == 'shortlist']]; then
+        echo install sync rm sca activate coverag
+        return
+    fi
+
+
     if [[ $pipaction == 'rm' ]]; then
         echo 'Removing Virtual Environment'
         pyenv exec pipenv --rm
