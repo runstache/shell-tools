@@ -26,34 +26,35 @@ function installSca() {
   pipenv install sbom-html --dev --index=artifactory
 }
 
-function runMypy() {
+function runMypy($root) {
   Write-Host "Running MyPy..."
-  mypy src/ --ignore-missing-imports
+  mypy $root/ --ignore-missing-imports
 }
 
-function runPylint {
+function runPylint($root) {
   Write-Host "Running Pylint..."
-  pylint src/ 
+  pylint $root/ 
 }
 
-function runPyflakes { 
+function runPyflakes($root) { 
   Write-Host "Running Pyflakes..."
-  pyflakes src/ 
+  pyflakes $root/ 
 }
 
-function runPycodestyle { 
+function runPycodestyle($root) { 
   Write-Host "Running PyCodeStyle..."
-  pycodestyle src/ --max-line-length=100 
+  pycodestyle $root/ --max-line-length=100 
 }
 
-function runBandit { 
+function runBandit($root) { 
   Write-Host "Running Bandit..."
-  bandit src/ -r -c ./pyproject.toml 
+  bandit $root/ -r -c ./pyproject.toml 
 }
 
 function runPyTestCoverage {
+  $root = (root_folder)
   Write-Host "Running PyTest with Coverage..."
-  pytest --cov=src .\tests\ --cov-report=html; .\htmlcov\index.html 
+  pytest --cov=$root .\tests\ --cov-report=html; .\htmlcov\index.html 
 
 }
 
@@ -72,11 +73,13 @@ function run_sca {
       activateEnvironment
   }
 
-  runMypy
-  runPylint
-  runPycodestyle
-  runPyflakes
-  runBandit
+  $root = (root_folder)
+  Write-Host -ForegroundColor White 'Running SCA Checks on '$root
+  runMypy($root)
+  runPylint($root)
+  runPycodestyle($root)
+  runPyflakes($root)
+  runBandit($root)
 
 }
 
@@ -99,6 +102,15 @@ for the python version and all Static Code Analysis dependencies will be install
 
 - help: Displays this message.
 "@
+}
+
+function root_folder() {
+  $dirs = @(Get-ChildItem . -Name -Directory -Exclude .*,config,deployment,src,tests,cdk.out,libs)
+  if ($dirs.Length -eq 1) {
+    return $dirs[0]
+  }
+  return "src"
+  
 }
  
 
