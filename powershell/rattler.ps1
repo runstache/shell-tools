@@ -105,11 +105,12 @@ for the python version and all Static Code Analysis dependencies will be install
 }
 
 function root_folder() {
-  $dirs = @(Get-ChildItem . -Name -Directory -Exclude .*,config,deployment,src,tests,cdk.out,libs,htmlcov,docs)
-  if ($dirs.Length -eq 1) {
-    return $dirs[0]
+
+  $source_folder = 'src'
+  if (-Not (Test-Path 'src')) {
+    $source_folder = (Get-ChildItem -Filter __init__.py -Recurse -Depth 1)[0].Directory.Name
   }
-  return "src"
+  return $source_folder
   
 }
  
