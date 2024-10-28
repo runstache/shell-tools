@@ -44,6 +44,9 @@ rattler sync 3.11.7
 # Install Static Code Analysis and Testing Packages
 rattler install sca
 
+# Install AWS CDK Libraries
+rattler install cdk
+
 # Activate Virtual Environment
 rattler activate
 

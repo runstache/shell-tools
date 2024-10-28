@@ -113,6 +113,11 @@ function root_folder() {
   return $source_folder
   
 }
+
+function add_cdk() {
+  pipenv install aws-cdk-lib constructs boto3
+  pipenv install checkov --dev
+}
  
 
 function rattler {
@@ -148,6 +153,11 @@ function rattler {
   if ($pipcommand -eq "activate") {
       activateEnvironment
       return
+  }
+
+  if ($pipcommand -eq "install" -And $pyversion -eq "cdk") {
+    add_cdk
+    return
   }
   
   if ($pipcommand -eq "install" -And $pyversion -eq "sca") {
