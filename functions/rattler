@@ -1,7 +1,22 @@
 function rattler (){
 
-    local pipaction="$1"
+    local pipaction=${1?:"Pip Action is required"}
     local pyversion="$2"
+
+
+
+    root_folder="src"
+    search_dir="."
+    # Define the folder names to exclude
+    exclude_dirs=("tests" ".venv" "venv")
+
+    # Find the first subfolder with an __init__.py file, excluding certain folders
+    for dir in $(find "$search_dir" -type d -maxdepth 1 -not -path "*tests*" -not -path "*.venv" -not -path "*venv*"); do;
+        if [[ -f "$dir/__init__.py" ]]; then;
+                root_folder=$dir
+                break
+        fi
+    done
 
     if [[ $pipaction == 'rm' ]]; then;
         echo 'Removing Virtual Environment'
@@ -16,18 +31,18 @@ function rattler (){
     fi
 
     if [[ $pipaction == 'sca' ]]; then;
-        echo 'Running Static Code Analysis'
-        mypy src/ --ignore-missing-imports
-        pylint src/
-        pyflakes src/
-        pycodestyle src/ --max-line-length 100
-        bandit -r src/ -c ./pyproject.toml
+        echo "Running Static Code Analysis - ${root_folder}"
+        mypy $root_folder/ --ignore-missing-imports
+        pylint $root_folder/
+        pyflakes $root_folder/
+        pycodestyle $root_folder/ --max-line-length 100
+        bandit -r $root_folder/ -c ./pyproject.toml
         return
     fi
 
     if [[ $pipaction == 'coverage' ]]; then;
         echo 'Running Code Coverage'
-        pytest --cov-report html --cov src/ tests/
+        pytest --cov-report html --cov $root_folder tests/
         open ./htmlcov/index.html
         return
 
