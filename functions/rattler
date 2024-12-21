@@ -48,7 +48,6 @@ function rattler (){
 
     fi
 
-
     if [[ $# -lt 2 ]]; then;
         pyenv exec pipenv $1 --dev
         chmod +x ./.venv/bin/activate
@@ -63,6 +62,14 @@ function rattler (){
             pipenv install mypy pycodestyle pytest assertpy pyflakes bandit pytest-cov pylint --dev
             return
         fi
+
+        if [[ $pyversion == 'cdk' ]]; then;
+            source ./.venv/bin/activate
+            pipenv install aws-cdk-lib constructs
+            pipenv install checkov --dev
+            return
+        fi
+
         pyenv exec pipenv $1 --python $2 --dev
         chmod +x ./.venv/bin/activate
         source ./.venv/bin/activate

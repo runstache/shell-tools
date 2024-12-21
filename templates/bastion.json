@@ -1,0 +1,10 @@
+{
+    "<connection_name>": {
+      "profile": "AWS Profile Name",
+      "stackName": "Tagged Value for Stack name on the AWS EC2",
+      "sourcePort": "Local Port to map",
+      "destinationPort": "Desitination Port to map",
+      "host": "Host Name to connect",
+      "environment": "Environment Tag on the EC2"
+    }
+}

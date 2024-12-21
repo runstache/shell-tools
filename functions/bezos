@@ -88,7 +88,7 @@ function bezos {
         token=$(echo $aws_creds | jq '.SessionToken')
         expiration=$(echo $aws_creds | jq '.Expiration')
 
-        content=$(cat $GIT_HOME/shell-tools/creds.template)
+        content=$(cat $GIT_HUB_HOME/shell-tools/creds.template)
         content=${content//'#access_key'/$access_key}
         content=${content//'#secret_key'/$secret_key}
         content=${content//'#token'/$token}
