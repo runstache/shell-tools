@@ -1,0 +1,67 @@
+<html>
+<style>
+    h1 {
+        font-family: verdana;
+    }
+
+    p {
+        font-family: courier;
+        font-weight: bold;
+    }
+</style>
+<script>
+    var countDownDate = new Date(#expiration).getTime();
+
+    var x = setInterval(function () {
+
+        var now = new Date().getTime();
+        var tdelta = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var hours = Math.floor(tdelta / (1000 * 60 * 60));
+        var minutes = Math.floor((tdelta % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((tdelta % (1000 * 60)) / 1000);
+
+        document.getElementById("expire").innerHTML = "Expires in: " + hours.toString().padStart(2, "0") + ":"
+            + minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0");
+
+        // If the count down is finished, write some text
+        if (tdelta < 0) {
+            clearInterval(x);
+            document.getElementById("expire").innerHTML = "EXPIRED";
+        }
+    }, 1000);
+</script>
+
+<body>
+    <h1>#aws_profile</h1>
+    <p id="expire"></p>
+    <table>
+        <tr>
+            <td><button type="button" id="copy_key_name"
+                    onclick="navigator.clipboard.writeText('AWS_ACCESS_KEY_ID')">AWS_ACCESS_KEY_ID</button></td>
+            <td><input type="text" id="aws_key" value=#access_key />
+                <button type="Button" id="copy_key_value"
+                    onclick="navigator.clipboard.writeText(document.getElementById('aws_key').value)">Copy</button>
+            </td>
+        </tr>
+        <tr>
+            <td><button type="button" id="copy_secret_name"
+                    onclick="navigator.clipboard.writeText('AWS_SECRET_ACCESS_KEY')">AWS_SECRET_ACCESS_KEY</button></td>
+            <td><input type="text" id="aws_secret" value=#secret_key>
+                <button type="Button" id="copy_secret_value"
+                    onclick="navigator.clipboard.writeText(document.getElementById('aws_secret').value)">Copy</button>
+            </td>
+        </tr>
+        <tr>
+            <td><button type="button" id="copy_token_name"
+                    onclick="navigator.clipboard.writeText('AWS_SESSION_TOKEN')">AWS_SESSION_TOKEN</button></td>
+            <td><input type="text" id="aws_token" value=#token>
+                <button type="Button" id="copy_token_value"
+                    onclick="navigator.clipboard.writeText(document.getElementById('aws_token').value)">Copy</button>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>
