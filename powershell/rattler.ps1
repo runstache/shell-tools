@@ -22,7 +22,7 @@ function installSca() {
   }
 
   Write-Host -ForegroundColor White 'Installing Dev Testing Tools'
-  pipenv install --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit
+  pipenv install --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8
   pipenv install sbom-html --dev --index=artifactory
 }
 
@@ -43,7 +43,7 @@ function runPyflakes($root) {
 
 function runPycodestyle($root) { 
   Write-Host "Running PyCodeStyle..."
-  pycodestyle $root/ --max-line-length=100 
+  pycodestyle $root/ --max-line-length 100 
 }
 
 function runBandit($root) { 
@@ -55,6 +55,12 @@ function runPyTestCoverage {
   $root = (root_folder)
   Write-Host "Running PyTest with Coverage..."
   pytest --cov=$root .\tests\ --cov-report=html; .\htmlcov\index.html 
+
+}
+
+function runflake8($root) {  
+  Write-Host "Running Flake8..."
+  flake8 $root/ --max-line-length 100
 
 }
 
@@ -76,6 +82,7 @@ function run_sca {
   $root = (root_folder)
   Write-Host -ForegroundColor White 'Running SCA Checks on '$root
   runMypy($root)
+  runflake8($root)
   runPylint($root)
   runPycodestyle($root)
   runPyflakes($root)

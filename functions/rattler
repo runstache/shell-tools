@@ -7,9 +7,7 @@ function rattler (){
 
     root_folder="src"
     search_dir="."
-    # Define the folder names to exclude
-    exclude_dirs=("tests" ".venv" "venv")
-
+    
     # Find the first subfolder with an __init__.py file, excluding certain folders
     for dir in $(find "$search_dir" -type d -maxdepth 1 -not -path "*tests*" -not -path "*.venv" -not -path "*venv*"); do;
         if [[ -f "$dir/__init__.py" ]]; then;
@@ -33,6 +31,7 @@ function rattler (){
     if [[ $pipaction == 'sca' ]]; then;
         echo "Running Static Code Analysis - ${root_folder}"
         mypy $root_folder/ --ignore-missing-imports
+        flake8 $root_folder/ --max-line-length 100
         pylint $root_folder/
         pyflakes $root_folder/
         pycodestyle $root_folder/ --max-line-length 100
@@ -59,7 +58,7 @@ function rattler (){
     if [[ $# -eq 2 ]]; then;
         if [[ $pyversion == 'sca' ]]; then;
             source ./.venv/bin/activate
-            pipenv install mypy pycodestyle pytest assertpy pyflakes bandit pytest-cov pylint --dev
+            pipenv install mypy pycodestyle pytest assertpy pyflakes bandit pytest-cov pylint flake8 --dev
             return
         fi
 
