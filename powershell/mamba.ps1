@@ -1,16 +1,16 @@
-function checkActive() {
+function uv_check_active() {
   if (!$env:VIRTUAL_ENV) {
-    activateEnvironment
+    uv_activate_environment
   }
 }
 
-function run_checkov {
+function uv_run_checkov {
   param (
       [Parameter(Position = 0, ValueFromRemainingArguments)]
       [String[]]$Parameters
   )
 
-  checkActive
+  uv_check_active
 
   $checkov_cmd = Get-Command * | Where-Object Name -Like 'checkov*'
   if ($checkov_cmd) {
@@ -21,82 +21,82 @@ function run_checkov {
   }
 }
 
-function installSca() {
+function uv_install_sca() {
 
-  checkActive
+  uv_check_active
   Write-Host -ForegroundColor White 'Installing Dev Testing Tools'
   uv add --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8  
 }
 
-function runMypy($root) {
-  checkActive
+function us_run_mypy($root) {
+  uv_check_active
   Write-Host "Running MyPy..."
   uv run mypy $root/ --ignore-missing-imports
 }
 
-function runPylint($root) {
-  checkActive
+function uv_run_pylint($root) {
+  uv_check_active
   Write-Host "Running Pylint..."
   uv run pylint $root/ 
 }
 
-function runPyflakes($root) { 
-  checkActive
+function uv_run_pyflakes($root) { 
+  uv_check_active
   Write-Host "Running Pyflakes..."
   uv run pyflakes $root/ 
 }
 
-function runPycodestyle($root) { 
-  checkActive
+function uv_run_pycodestyle($root) { 
+  uv_check_active
   Write-Host "Running PyCodeStyle..."
   uv run pycodestyle $root/ --max-line-length 100 
 }
 
-function runBandit($root) { 
-  checkActive
+function uv_run_bandit($root) { 
+  uv_check_active
   Write-Host "Running Bandit..."
   uv run bandit $root/ -r -c ./pyproject.toml 
 }
 
-function runPyTestCoverage {
-  checkActive
-  $root = (root_folder)
+function uv_run_pytest_coverage {
+  uv_check_active
+  $root = (uv_root_folder)
   Write-Host "Running PyTest with Coverage..."
   uv run pytest --cov=$root .\tests\ --cov-report=html; .\htmlcov\index.html 
 
 }
 
-function runflake8($root) {  
-  checkActive
+function uv_run_flake8($root) {  
+  uv_check_active
   Write-Host "Running Flake8..."
   uv run flake8 $root/ --max-line-length 100
 
 }
 
-function activateEnvironment {
+function uv_activate_environment {
   Write-Host "Activating Python Environment"
   ./.venv/Scripts/activate
 
 }
 
 
-function run_sca {
+function uv_run_sca {
 
-  checkActive
-  $root = (root_folder)
+  uv_check_active
+  $root = (uv_root_folder)
   Write-Host -ForegroundColor White 'Running SCA Checks on '$root
-  runMypy($root)
-  runflake8($root)
-  runPylint($root)
-  runPycodestyle($root)
-  runPyflakes($root)
-  runBandit($root)
+  uv_run_mypy($root)
+  uv_run_flake8($root)
+  uv_run_pylint($root)
+  uv_run_pycodestyle($root)
+  uv_run_pyflakes($root)
+  uv_run_bandit($root)
 
 }
 
-function py_me_help() {
+function mamba_help() {
   Write-Host @"
-The following Operations are available through the pytool commandlet:
+The following Operations are available through the mamba commandlet:
 
 - install: Creates a new PyProject.toml if not present, sets up a virtual environment and installs with upgrade the dependencies of the project. Contains 
 options for adding the Static Code analysis libraries and also AWS CDK through the sca option and cdk option of the Install command.
@@ -115,7 +115,7 @@ options for adding the Static Code analysis libraries and also AWS CDK through t
 "@
 }
 
-function root_folder() {
+function uv_root_folder() {
 
   $source_folder = 'src'
   if (-Not (Test-Path 'src')) {
@@ -125,12 +125,12 @@ function root_folder() {
   
 }
 
-function add_cdk() {
+function uv_add_cdk() {
   uv add aws-cdk-lib constructs boto3
   uv add checkov --dev
 }
 
-function setupEnvironment() {
+function uv_setup_environment() {
   if (!(Test-Path ".pyproject.toml")) {
     Write-Host "Adding Project Setup.."
     uv init --bare
@@ -139,7 +139,7 @@ function setupEnvironment() {
   if (!(Test-Path ".\.venv")) {
     Write-Host "Creating Virtual Environment" -ForegroundColor White
     uv venv .venv
-    activateEnvironment
+    uv_check_active
   }
   return
 }
@@ -152,17 +152,17 @@ function mamba {
   )
 
   if ($pipcommand -eq "help") {
-      py_me_help
+      mamba_help
       return
   }
 
   if ($pipcommand -eq "sca") {
-      run_sca
+      uv_run_sca
       return
   }
 
   if ($pipcommand -eq "coverage") {
-      runPyTestCoverage
+      uv_run_pytest_coverage
       return
   }
 
@@ -172,17 +172,17 @@ function mamba {
   }
 
   if ($pipcommand -eq "activate") {
-      activateEnvironment
+      uv_check_active
       return
   }
 
   if ($pipcommand -eq "install" -And $pyversion -eq "cdk") {
-    add_cdk
+    uv_add_cdk
     return
   }
   
   if ($pipcommand -eq "install" -And $pyversion -eq "sca") {
-      installSca
+      uv_install_sca
       return
   }
 
