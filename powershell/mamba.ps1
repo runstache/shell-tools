@@ -74,7 +74,7 @@ function runflake8($root) {
 }
 
 function activateEnvironment {
-  Write-Host "Activating PipEnv Environment"
+  Write-Host "Activating Python Environment"
   ./.venv/Scripts/activate
 
 }
