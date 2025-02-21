@@ -64,9 +64,9 @@ The __bastions.json__ file contains entries in the following format:
 
 Multiple Bastions can be configured in the file as new Key/Value pairs at the root level. Each Key at the root level is used for the Listing of Bastions and the connection.
 
-## Rattler
+## Rattler / Mamba
 
-The Rattler Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects.
+The Rattler provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects. The Mamba tool is the provides the same functionality as Rattler but utilizes the UV package manager instead of PipEnv. Environment variables for this tool should be configured based on the UV specification. The Rattler variables are not needed.
 
 ### Rattler Environment Variables
 
