@@ -25,7 +25,7 @@ function uv_install_sca() {
 
   uv_check_active
   Write-Host -ForegroundColor White 'Installing Dev Testing Tools'
-  uv add --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8  
+  uv add --active --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8 flake8-bugbear
 }
 
 function us_run_mypy($root) {
@@ -126,8 +126,8 @@ function uv_root_folder() {
 }
 
 function uv_add_cdk() {
-  uv add aws-cdk-lib constructs boto3
-  uv add checkov --dev
+  uv add --active aws-cdk-lib constructs boto3
+  uv add --active checkov --dev
 }
 
 function uv_setup_environment() {

@@ -1,39 +1,36 @@
 # Rattler ZShell Tool
 
-The Rattler Tool provides shortcuts to interacting with common environment executions of my Python Projects in ZShell. The windows version of this tool leverages PipEnv to allow for easier use of 3rd party repositories. This version leverages UV for package management and installation.
-
-## Requirements
-
-The utility assumes the following are installed:
-
-* uv
-* rust 
+The Rattler Tool provides shortcuts to interacting with PipEnv and common environment executions of my Python Projects in ZShell. Unlike the Windows version, 3rd Party python repositories are not supported automatically.
 
 ## Install / Sync
 
 The Install and Sync Commands are used to initialize a new project with the following:
 
-* New PyProject.toml if not exists
-* Creates a Virtual Environment if one does not exist
+* New PiFile (if not exists)
 * Installs all dependencies
+* Installs pipenv to local environment
 * Activates the local environment
 
 The Install and Sync Commands also take the following parameters:
+ 
+* Python Version Number - Installs with the provided Python Version
+* sca - Installs the common Static code analysis tools
+* cdk - Installs the AWS CDK Components
 
-* Python Version Number - The Python Version to use for the project. (Will use last cached version for UV by default)
-* sca - Installs the Static Code analysis Tools
-* cdk - Install AWS CDK Libraries and Checkov scanning
-
-When passing the Python Version number, the project will be pinned to the version by UV. The __install__ command also excepts the __sca__ value in which it will install the following test tools:
+When passing the Python Version number, the virtual environment will be created using that python version based on the --python parameter for PipEnv. The __install__ command also excepts the __sca__ value in which it will install the following test tools:
 
 * pytest
 * pytest-cov
 * pyflakes
 * pylint
-* pycodestyle
 * flake8
+* flake8-bugbear
+* pycodestyle
 * bandit
 * assertpy
+* aws-cdk-lib (cdk)
+* constructs (cdk)
+* checkov (cdk, dev only)
 
 Additional parameters are available for the __rattler__ command:
 
@@ -67,5 +64,8 @@ rattler sca
 
 # Remove Virtual Environment
 rattler rm
+
+# Print Help Text
+rattler help
 
 ```
