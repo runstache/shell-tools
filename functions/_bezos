@@ -1,0 +1,22 @@
+#compdef _bezos bezos
+
+_bezos() {
+    local state
+    _arguments -C \
+        '1: :->cmd' \
+        '2: :->scmd' \
+        '*: :->args'
+
+
+    case $state in
+        (cmd) _arguments '1:cmds:(login creds bastion)' ;;
+        (scmd) compadd "$@" $(_bezos_bastion ${words[2]});;
+    esac
+   
+}
+
+_bezos_bastion(){
+    if [[ "${1}" == "bastion" ]]; then
+        echo list
+    fi
+}
