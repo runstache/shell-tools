@@ -25,7 +25,7 @@ function uv_install_sca() {
 
   uv_check_active
   Write-Host -ForegroundColor White 'Installing Dev Testing Tools'
-  uv add --active --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8 flake8-bugbear
+  uv add --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8  
 }
 
 function us_run_mypy($root) {
@@ -126,12 +126,12 @@ function uv_root_folder() {
 }
 
 function uv_add_cdk() {
-  uv add --active aws-cdk-lib constructs boto3
-  uv add --active checkov --dev
+  uv add aws-cdk-lib constructs boto3
+  uv add checkov --dev
 }
 
 function uv_setup_environment() {
-  if (!(Test-Path ".pyproject.toml")) {
+  if (!(Test-Path ".\pyproject.toml")) {
     Write-Host "Adding Project Setup.."
     uv init --bare
   }
@@ -190,7 +190,7 @@ function mamba {
     uv python pin $pyversion
   }
 
-  setupEnvironment
+  uv_setup_environment
   if ($pipcommand -eq "install") {
     uv sync --active --all-groups --upgrade
     return
