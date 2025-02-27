@@ -28,7 +28,7 @@ function uv_install_sca() {
   uv add --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8  
 }
 
-function us_run_mypy($root) {
+function uv_run_mypy($root) {
   uv_check_active
   Write-Host "Running MyPy..."
   uv run mypy $root/ --ignore-missing-imports
