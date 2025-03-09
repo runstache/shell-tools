@@ -42,11 +42,22 @@ function mamba (){
             source ./.venv/bin/activate
         fi
 
+        echo 'Running MyPy...'
         mypy $root_folder/ --ignore-missing-imports
+
+        echo 'Running Flake8...'
         flake8 $root_folder/ --max-line-length 100
+
+        echo 'Running Pylint...'
         pylint $root_folder/
+
+        echo 'Running Pyflakes...'
         pyflakes $root_folder/
+
+        echo 'Running PyCodeStyle...'
         pycodestyle $root_folder/ --max-line-length 100
+
+        echo 'Running Bandit...'
         bandit -r $root_folder/ -c ./pyproject.toml
         return
     fi
