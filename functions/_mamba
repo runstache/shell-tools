@@ -10,7 +10,7 @@ _mamba() {
 
 
     case $state in
-        (cmd) _arguments '1:cmds:(install sync rm activate sca coverage)' ;;
+        (cmd) _arguments '1:cmds:(install sync rm activate sca coverage lint)' ;;
         (scmd) compadd "$@" $(_mamba_install ${words[2]});;
     esac
    

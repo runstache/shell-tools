@@ -111,6 +111,8 @@ options for adding the Static Code analysis libraries and also AWS CDK through t
 
 - coverage: Executes PyTest with Coverage Report. Opens the Report when completed.
 
+- lint: Executes Ruff Linting and Checks on the current project
+
 - help: Displays this message.
 "@
 }
@@ -147,7 +149,7 @@ function uv_setup_environment() {
 
 function mamba {
   param(
-      [ValidateSet("sca", "coverage", "activate", "rm", "install", "sync", "help")]$pipcommand,
+      [ValidateSet("sca", "coverage", "activate", "rm", "install", "sync", "help", "lint")]$pipcommand,
       $pyversion
   )
 
@@ -174,6 +176,12 @@ function mamba {
   if ($pipcommand -eq "activate") {
       uv_check_active
       return
+  }
+
+  if ($pipcommand -eq "lint") {
+    uvx ruff check
+    uvx ruff format
+    return
   }
 
   if ($pipcommand -eq "install" -And $pyversion -eq "cdk") {
