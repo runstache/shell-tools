@@ -20,5 +20,6 @@ _mamba_install(){
     if [[ "${1}" == "install" ]]; then
         echo 'sca'
         echo 'cdk'
+        echo 'hooks'
     fi
 }

@@ -87,6 +87,25 @@ function mamba (){
             return
         fi
 
+        if [[ $pyversion == 'hooks' ]]; then;
+            echo 'Adding Python Git Hooks'
+            if [[ -d './.git/hooks' ]]; then;
+                cp -r $GIT_HUB_HOME/shell-tools/hooks/python/ ./.git/hooks/
+                for file in './.git/hooks'; do
+                    if [[ ! "$file" == *".sample"* ]]; then;
+                        chmod +x $file
+                    fi
+
+                done
+
+
+
+            else;
+                echo 'Could not find Hooks directory in Git Repository'
+            fi
+            return
+        fi
+
         if [[ $pyversion == 'cdk' ]]; then;
             echo 'Adding AWS CDK Packages'
 

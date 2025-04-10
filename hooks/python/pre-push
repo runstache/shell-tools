@@ -1,0 +1,25 @@
+# Run Static Code Analysis prior to push
+
+root_folder="src"
+search_dir="."
+
+for dir in $(find "$search_dir" -type d -maxdepth 1 ! -path "*tests*" ! -path "*.venv" ! -path "*venv*"); do
+    if [ -f "$dir/__init__.py" ]; then
+        root_folder=$dir
+        break
+    fi
+done
+
+
+echo "Running Static Code Analysis - ${root_folder}"
+echo 'Running MyPy...'
+uv run mypy $root_folder/ --ignore-missing-imports
+
+echo 'Running Flake8...'
+uv run flake8 $root_folder/ --max-line-length 100
+
+echo 'Running Pylint...'
+uv run pylint $root_folder/
+
+echo 'Running Bandit...'
+uv run bandit -r $root_folder/ -c ./pyproject.toml
