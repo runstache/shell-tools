@@ -16,4 +16,4 @@ echo 'Running MyPy...'
 uv run mypy $root_folder/ --ignore-missing-imports
 
 echo 'Running Ruff...'
-uvx run check
+uvx ruff check
