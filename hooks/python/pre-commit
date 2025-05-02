@@ -1,4 +1,4 @@
 echo "Running Linting Hooks"
 # Run Ruff Lint
- uvx ruff check
+ uvx ruff check --fix
  uvx ruff format

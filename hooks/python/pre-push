@@ -15,11 +15,5 @@ echo "Running Static Code Analysis - ${root_folder}"
 echo 'Running MyPy...'
 uv run mypy $root_folder/ --ignore-missing-imports
 
-echo 'Running Flake8...'
-uv run flake8 $root_folder/ --max-line-length 100
-
-echo 'Running Pylint...'
-uv run pylint $root_folder/
-
-echo 'Running Bandit...'
-uv run bandit -r $root_folder/ -c ./pyproject.toml
+echo 'Running Ruff...'
+uvx run check

@@ -15,8 +15,8 @@ function mamba (){
     done
 
     if [[ $pipaction == 'lint' ]]; then;
-        uvx ruff format
-        uvx ruff check
+        uvx ruff format $root_folder/
+        uvx ruff check $root_folder/
         return
 
     fi
@@ -50,10 +50,10 @@ function mamba (){
         fi
 
         echo 'Running MyPy...'
-        mypy $root_folder/ --ignore-missing-imports
+        uv run --lock mypy $root_folder/ --ignore-missing-imports
 
         echo 'Executing Ruff Checks'
-        uvx ruff check
+        uvx ruff check $root_folder/
         return
     fi
 
@@ -133,7 +133,7 @@ function mamba (){
                 uv sync --all-groups --upgrade
                 return
         fi
-        uv sync --all-groups
+        uv sync --all-groups --lock
         return
     fi
 
