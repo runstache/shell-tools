@@ -13,7 +13,7 @@ done
 
 echo "Running Static Code Analysis - ${root_folder}"
 echo 'Running MyPy...'
-uv run mypy $root_folder/ --ignore-missing-imports
+uv run --locked mypy $root_folder/ --ignore-missing-imports
 
 echo 'Running Ruff...'
 uvx ruff check

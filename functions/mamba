@@ -50,7 +50,7 @@ function mamba (){
         fi
 
         echo 'Running MyPy...'
-        uv run --lock mypy $root_folder/ --ignore-missing-imports
+        uv run --locked mypy $root_folder/ --ignore-missing-imports
 
         echo 'Executing Ruff Checks'
         uvx ruff check $root_folder/
@@ -64,7 +64,7 @@ function mamba (){
             source ./.venv/bin/activate
         fi
 
-        pytest --cov-report html --cov $root_folder tests/
+        uv run --locked pytest --cov-report html --cov $root_folder tests/
         open ./htmlcov/index.html
         return
 
@@ -133,7 +133,7 @@ function mamba (){
                 uv sync --all-groups --upgrade
                 return
         fi
-        uv sync --all-groups --lock
+        uv sync --all-groups --locked
         return
     fi
 
