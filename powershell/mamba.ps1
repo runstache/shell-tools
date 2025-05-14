@@ -179,7 +179,7 @@ function mamba {
   }
 
   if ($pipcommand -eq "lint") {
-    uvx ruff check
+    uvx ruff check --fix
     uvx ruff format
     return
   }

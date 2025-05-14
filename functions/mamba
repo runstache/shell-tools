@@ -15,8 +15,8 @@ function mamba (){
     done
 
     if [[ $pipaction == 'lint' ]]; then;
-        uvx ruff format $root_folder/
-        uvx ruff check $root_folder/
+        uvx ruff format
+        uvx ruff check --fix
         return
 
     fi
