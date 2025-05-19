@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+set -o errexit
+
 echo "Running Linting Hooks"
 # Run Ruff Lint
  uvx ruff check --fix
