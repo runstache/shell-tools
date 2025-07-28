@@ -3,16 +3,6 @@ function mamba (){
     local pipaction=${1?:"Pip Action is required"}
     local pyversion="$2"
 
-    root_folder="src"
-    search_dir="."
-    
-    # Find the first subfolder with an __init__.py file, excluding certain folders
-    for dir in $(find "$search_dir" -type d -maxdepth 1 -not -path "*tests*" -not -path "*.venv" -not -path "*venv*"); do;
-        if [[ -f "$dir/__init__.py" ]]; then;
-                root_folder=$dir
-                break
-        fi
-    done
 
     if [[ $pipaction == 'lint' ]]; then;
         uvx ruff format
@@ -43,17 +33,17 @@ function mamba (){
     fi
 
     if [[ $pipaction == 'sca' ]]; then;
-        echo "Running Static Code Analysis - ${root_folder}"
+        echo "Running Static Code Analysis"
 
         if [[ ! ${VIRTUAL_ENV} ]]; then;
             source ./.venv/bin/activate
         fi
 
         echo 'Running MyPy...'
-        uv run --locked mypy $root_folder/ --ignore-missing-imports
+        uv run --locked mypy .
 
         echo 'Executing Ruff Checks'
-        uvx ruff check $root_folder/
+        uvx ruff check
         return
     fi
 
@@ -64,7 +54,7 @@ function mamba (){
             source ./.venv/bin/activate
         fi
 
-        uv run --locked pytest --cov-report html --cov $root_folder tests/
+        uv run --locked pytest --cov-report html --cov
         open ./htmlcov/index.html
         return
 

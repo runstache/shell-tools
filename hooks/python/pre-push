@@ -3,20 +3,9 @@ set -o errexit
 
 # Run Static Code Analysis prior to push
 
-root_folder="src"
-search_dir="."
-
-for dir in $(find "$search_dir" -type d -maxdepth 1 ! -path "*tests*" ! -path "*.venv" ! -path "*venv*"); do
-    if [ -f "$dir/__init__.py" ]; then
-        root_folder=$dir
-        break
-    fi
-done
-
-
-echo "Running Static Code Analysis - ${root_folder}"
+echo "Running Static Code Analysis"
 echo 'Running MyPy...'
-uv run --locked mypy $root_folder/ --ignore-missing-imports
+uv run --locked mypy .
 
 echo 'Running Ruff...'
 uvx ruff check
