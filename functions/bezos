@@ -47,12 +47,12 @@ function bezos {
         echo "Connecting to Basion ${bastioncommand}"
 
         config=$(jq --arg key "$bastioncommand" '.[$key]' $bastionfile)
-        stackname=$(echo $config | jq '.stackName')
-        environment=$(echo $config | jq '.environment')
-        sourceport=$(echo $config | jq '.sourcePort')
-        destinationport=$(echo $config | jq '.destinationPort')
-        remotehost=$(echo $config | jq '.host')
-        profile=$(echo $config | jq '.profile')
+        stackname=$(echo $config | jq -r '.stackName')
+        environment=$(echo $config | jq -r '.environment')
+        sourceport=$(echo $config | jq -r '.sourcePort')
+        destinationport=$(echo $config | jq -r '.destinationPort')
+        remotehost=$(echo $config | jq -r '.host')
+        profile=$(echo $config | jq -r '.profile')
 
         
         hostbastion=$(aws ec2 describe-instances \
@@ -62,7 +62,7 @@ function bezos {
         
         aws ssm start-session --target $hostbastion \
         --document-name AWS-StartPortForwardingSessionToRemoteHost \
-        --parameters host=$hostbastion,portNumber=$destinationport,localPortNumber=$sourceport \
+        --parameters host=$remotehost,portNumber=$destinationport,localPortNumber=$sourceport \
         --profile $profile
 
         return
