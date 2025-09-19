@@ -47,21 +47,29 @@ function bezos {
         echo "Connecting to Basion ${bastioncommand}"
 
         config=$(jq --arg key "$bastioncommand" '.[$key]' $bastionfile)
-        stackname=$(echo $config | jq -r '.stackName')
-        environment=$(echo $config | jq -r '.environment')
+        tags=$(echo $config | jq -r '.tags[]')
         sourceport=$(echo $config | jq -r '.sourcePort')
         destinationport=$(echo $config | jq -r '.destinationPort')
         remotehost=$(echo $config | jq -r '.host')
         profile=$(echo $config | jq -r '.profile')
-
+        document=$(echo $config | jq -r '.document')
         
+        for item in ${(f)"$(jq -c '.tags[]' <<< $config)"}; do
+            tag=$(jq -r '.tag' <<< $item)
+            value=$(jq -r '.value' <<< $item)
+            combined="Name=tag:${tag},Values=${value}"
+            filter+="${combined},"
+        done
+
+        bastionfilter="${filter%,}
+
         hostbastion=$(aws ec2 describe-instances \
-            --filter Name=tag:aws:cloudformation:stack-name,Values=$stackname Name=tag:Environment,Values=$environment \
+            --filter $bastionfilter \
             --query 'Reservations[*].Instances[*].InstanceId' \
             --output text --profile $profile)
         
         aws ssm start-session --target $hostbastion \
-        --document-name AWS-StartPortForwardingSessionToRemoteHost \
+        --document-name $document \
         --parameters host=$remotehost,portNumber=$destinationport,localPortNumber=$sourceport \
         --profile $profile
 
