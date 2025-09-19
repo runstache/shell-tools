@@ -47,24 +47,15 @@ function bezos {
         echo "Connecting to Basion ${bastioncommand}"
 
         config=$(jq --arg key "$bastioncommand" '.[$key]' $bastionfile)
-        tags=$(echo $config | jq -r '.tags[]')
+        tags=$(echo $config | jq -c '.tags')
         sourceport=$(echo $config | jq -r '.sourcePort')
         destinationport=$(echo $config | jq -r '.destinationPort')
         remotehost=$(echo $config | jq -r '.host')
         profile=$(echo $config | jq -r '.profile')
         document=$(echo $config | jq -r '.document')
         
-        for item in ${(f)"$(jq -c '.tags[]' <<< $config)"}; do
-            tag=$(jq -r '.tag' <<< $item)
-            value=$(jq -r '.value' <<< $item)
-            combined="Name=tag:${tag},Values=${value}"
-            filter+="${combined},"
-        done
-
-        bastionfilter="${filter%,}
-
         hostbastion=$(aws ec2 describe-instances \
-            --filter $bastionfilter \
+            --filter $tags \
             --query 'Reservations[*].Instances[*].InstanceId' \
             --output text --profile $profile)
         

@@ -23,13 +23,23 @@ If you intend to use the Session Manager connections, you will need to configure
 {
     "<connection_name>": {
       "profile": "AWS Profile Name",
-      "stackName": "Tagged Value for Stack name on the AWS EC2",
+      "tags": ["Collection of Tag Objects (Name, Values) to search for the EC2"],
       "sourcePort": "Local Port to map",
       "destinationPort": "Desitination Port to map",
       "host": "Host Name to connect",
       "environment": "Environment Tag on the EC2"
+      "document": "Bastion Session Document
     }
 }
+```
+
+Tags should look like this:
+
+```javascript
+tags: [{
+        "Name": "tag:Environment",
+        "Values": ["prd"]
+      }]
 ```
 
 Each Top level key is the name of the connection you want to establish. Within that key contains the information required by the SSM command to find and connect to the EC2 Instance.  This is a very opinionated utility and may not be suitable for your individual implementation.
@@ -69,5 +79,3 @@ The __creds__ command is used to generate temporary keys from the provided profi
 ```command
 bezos creds my-profile
 ```
-
-
