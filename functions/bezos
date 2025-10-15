@@ -25,7 +25,7 @@ function bezos {
 
     if [[ $awsaction == 'login' ]]; then;         
         echo "Refreshing SSO Login..."
-        aws sso login --profile $ACTIVE_PROFILE
+        aws sso login --profile $ACTIVE_AWS_PROFILE
         return
 
     fi
@@ -72,7 +72,7 @@ function bezos {
         creds=$(aws configure export-credentials --profile $profile)
         if [[ $creds =~ 'error' ]]; then;
             echo "Invalid or expired SSO session, attempting re-login"
-            aws sso login --profile $ACTIVE_PROFILE
+            aws sso login --profile $ACTIVE_AWS_PROFILE
             creds=$(aws configure export-credentials --profile $profile)
             if [[ $creds =~ "error" ]]; then; 
                 echo "Unable to refresh SSO session."
