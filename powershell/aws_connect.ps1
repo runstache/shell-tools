@@ -151,9 +151,7 @@ function aws_connect {
     $destinationPort = $config.destinationPort
     $remoteHost = $config.host
 
-    $filter = @( "Name=tag:aws:cloudformation:stack-name,Values=$stack_name", "Name=tag:Environment,Values=$environment" )
-          
-    $hostBastion = aws ec2 describe-instances --filter @filter `
+    $hostBastion = aws ec2 describe-instances --filter $config.tags `
       --query 'Reservations[*].Instances[*].InstanceId' `
       --output text `
       --profile $config.profile
