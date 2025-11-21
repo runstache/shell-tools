@@ -145,24 +145,25 @@ function aws_connect {
       return
     }
 
-    $stack_name = $config.stackName
-    $environment = $config.environment
     $sourcePort = $config.sourcePort
     $destinationPort = $config.destinationPort
     $remoteHost = $config.host
+    $tags = $config.tags | ConvertTo-Json -Depth 10
+    $profile = $config.profile
+    $document = $config.document
 
-    $hostBastion = aws ec2 describe-instances --filter $config.tags `
+
+    $hostBastion = aws ec2 describe-instances --filter $tags `
       --query 'Reservations[*].Instances[*].InstanceId' `
       --output text `
-      --profile $config.profile
-          
-
+      --profile $profile
+    
     $parameters = @( "host=$remoteHost", "portNumber=$destinationPort", "localPortNumber=$sourcePort" )
     $paramList = $parameters -join ","
     aws ssm start-session --target $hostBastion `
-      --document-name AWS-StartPortForwardingSessionToRemoteHost `
+      --document-name $document `
       --parameters  $paramList `
-      --profile $config.profile
+      --profile $profile
     return
 
   }
