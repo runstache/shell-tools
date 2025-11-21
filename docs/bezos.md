@@ -55,6 +55,7 @@ The CLI contains three base commands:
 * login
 * bastion
 * creds
+* cp
 
 ### Login
 
@@ -79,3 +80,7 @@ The __creds__ command is used to generate temporary keys from the provided profi
 ```command
 bezos creds my-profile
 ```
+
+### CP
+
+The CP command will perform an S3 Copy operation but include the parameter __--exclude *.DS_Store__ in the operation automatically.

@@ -4,7 +4,7 @@ function bezos {
 
 
     # Available commands
-    allowedcommands=("login" "bastion" "creds")
+    allowedcommands=("login" "bastion" "creds" "cp")
 
     # Check if the variable is in the list
     found=false
@@ -22,6 +22,14 @@ function bezos {
         echo "$awsaction is not a valid command"
         return
     fi
+
+    if [[ $awsaction == 'cp' ]]; then;
+        args=("$@")
+        skip_dstore="--exclude *.DS_Store"
+        aws cp "${args[@]:1}" "$skip_dstore"
+        return 
+    fi
+
 
     if [[ $awsaction == 'login' ]]; then;         
         echo "Refreshing SSO Login..."
