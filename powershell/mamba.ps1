@@ -21,56 +21,24 @@ function uv_run_checkov {
   }
 }
 
-function uv_install_sca() {
+function uv_install_sca {
 
   uv_check_active
   Write-Host -ForegroundColor White 'Installing Dev Testing Tools'
-  uv add --dev pytest pytest-cov assertpy mypy pyflakes pylint pycodestyle bandit flake8  
+  uv add --active --dev mypy pytest assertpy pytest-cov 
 }
 
-function uv_run_mypy($root) {
+function uv_run_mypy {
   uv_check_active
   Write-Host "Running MyPy..."
-  uv run mypy $root/ --ignore-missing-imports
+  uv run --locked mypy .
 }
 
-function uv_run_pylint($root) {
-  uv_check_active
-  Write-Host "Running Pylint..."
-  uv run pylint $root/ 
-}
-
-function uv_run_pyflakes($root) { 
-  uv_check_active
-  Write-Host "Running Pyflakes..."
-  uv run pyflakes $root/ 
-}
-
-function uv_run_pycodestyle($root) { 
-  uv_check_active
-  Write-Host "Running PyCodeStyle..."
-  uv run pycodestyle $root/ --max-line-length 100 
-}
-
-function uv_run_bandit($root) { 
-  uv_check_active
-  Write-Host "Running Bandit..."
-  uv run bandit $root/ -r -c ./pyproject.toml 
-}
 
 function uv_run_pytest_coverage {
   uv_check_active
-  $root = (uv_root_folder)
   Write-Host "Running PyTest with Coverage..."
-  uv run pytest --cov=$root .\tests\ --cov-report=html; .\htmlcov\index.html 
-
-}
-
-function uv_run_flake8($root) {  
-  uv_check_active
-  Write-Host "Running Flake8..."
-  uv run flake8 $root/ --max-line-length 100
-
+  uv run --locked pytest --cov-report html --cov; .\htmlcov\index.html
 }
 
 function uv_activate_environment {
@@ -83,15 +51,10 @@ function uv_activate_environment {
 function uv_run_sca {
 
   uv_check_active
-  $root = (uv_root_folder)
   Write-Host -ForegroundColor White 'Running SCA Checks on '$root
-  uv_run_mypy($root)
-  uv_run_flake8($root)
-  uv_run_pylint($root)
-  uv_run_pycodestyle($root)
-  uv_run_pyflakes($root)
-  uv_run_bandit($root)
-
+  uv_run_mypy
+  uvx ruff check
+  
 }
 
 function mamba_help() {
@@ -115,16 +78,6 @@ options for adding the Static Code analysis libraries and also AWS CDK through t
 
 - help: Displays this message.
 "@
-}
-
-function uv_root_folder() {
-
-  $source_folder = 'src'
-  if (-Not (Test-Path 'src')) {
-    $source_folder = (Get-ChildItem -Filter __init__.py -Recurse -Depth 1)[0].Directory.Name
-  }
-  return $source_folder
-  
 }
 
 function uv_add_cdk() {
@@ -179,8 +132,8 @@ function mamba {
   }
 
   if ($pipcommand -eq "lint") {
-    uvx ruff check --fix
     uvx ruff format
+    uvx ruff check --fix
     return
   }
 
@@ -200,10 +153,10 @@ function mamba {
 
   uv_setup_environment
   if ($pipcommand -eq "install") {
-    uv sync --active --all-groups --upgrade
+    uv sync --active --all-groups --all-packages --upgrade
     return
   }
-  uv sync --active --all-groups
+  uv sync --active --all-groups --all-packages
   return
 
 }
