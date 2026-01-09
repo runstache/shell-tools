@@ -76,6 +76,8 @@ options for adding the Static Code analysis libraries and also AWS CDK through t
 
 - lint: Executes Ruff Linting and Checks on the current project
 
+- upgrade: Upgrades the Packages in the Environment
+
 - help: Displays this message.
 "@
 }
@@ -98,11 +100,18 @@ function uv_setup_environment() {
   }
   return
 }
+
+function uv_env_upgrade() {
+  Write-Host "Upgrading Packages"
+  uv_check_active
+  uv sync --all-packages --all-groups --upgrade
+  return
+}
  
 
 function mamba {
   param(
-      [ValidateSet("sca", "coverage", "activate", "rm", "install", "sync", "help", "lint")]$pipcommand,
+      [ValidateSet("sca", "coverage", "activate", "rm", "install", "sync", "help", "lint", "upgrade")]$pipcommand,
       $pyversion
   )
 
@@ -114,6 +123,11 @@ function mamba {
   if ($pipcommand -eq "sca") {
       uv_run_sca
       return
+  }
+
+  if ($pipcommand -eq "upgrade") {
+    uv_env_upgrade
+    return
   }
 
   if ($pipcommand -eq "coverage") {

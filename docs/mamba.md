@@ -7,7 +7,7 @@ The Mamba Tool provides shortcuts to interacting with common environment executi
 The utility assumes the following are installed:
 
 * uv
-* rust 
+* rust
 
 ## Install / Sync
 
@@ -28,12 +28,7 @@ When passing the Python Version number, the project will be pinned to the versio
 
 * pytest
 * pytest-cov
-* pyflakes
-* pylint
-* pycodestyle
-* flake8
-* flake8-bugbear
-* bandit
+* mypy
 * assertpy
 * aws-cdk-lib (cdk)
 * constructs (cdk)
@@ -42,10 +37,10 @@ When passing the Python Version number, the project will be pinned to the versio
 Additional parameters are available for the __mamba__ command:
 
 ```command
-# Install New Environment
+# Install New Environment with Package Upgrades
 mamba install
 
-# Install New Environment for Python 3.11.7
+# Install New Environment for Python 3.11.7 with Package Upgrades
 mamba install 3.11.7
 
 # Sync New Environment
@@ -71,5 +66,8 @@ mamba sca
 
 # Remove Virtual Environment
 mamba rm
+
+# Upgrade Project Dependencies
+mamba upgrade
 
 ```

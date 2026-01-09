@@ -11,6 +11,14 @@ function mamba (){
 
     fi
 
+    if [[ $pipaction == 'upgrade' ]]; then;
+        if [[ ! ${VIRTUAL_ENV} ]]; then;
+            source ./.venv/bin/activate
+        fi
+        echo 'Upgrading Packages...'
+        uv sync --all-packages --all-groups --upgrade
+    fi
+
     if [[ $pipaction == 'rm' ]]; then;
         echo 'Removing Virtual Environment'
 
