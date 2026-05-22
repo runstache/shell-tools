@@ -70,4 +70,7 @@ mamba rm
 # Upgrade Project Dependencies
 mamba upgrade
 
+# Scan Dependencies with PipAudit
+mamba audit
+
 ```

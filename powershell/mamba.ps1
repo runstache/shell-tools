@@ -47,6 +47,14 @@ function uv_activate_environment {
 
 }
 
+function uv_run_audit {
+  uv_check_active
+  Write-Host "Running PipAudit..."
+  uv export --format requirements-txt --no-emit-local -o ./audit-requirements.txt
+  uvx pip-audit -r ./audit-requirements.txt --disable-pip
+  rm ./audit-requirements.txt  
+}
+
 
 function uv_run_sca {
 
@@ -77,6 +85,8 @@ options for adding the Static Code analysis libraries and also AWS CDK through t
 - lint: Executes Ruff Linting and Checks on the current project
 
 - upgrade: Upgrades the Packages in the Environment
+
+- audit: Checks Project dependencies through PipAudit
 
 - help: Displays this message.
 "@
@@ -111,7 +121,7 @@ function uv_env_upgrade() {
 
 function mamba {
   param(
-      [ValidateSet("sca", "coverage", "activate", "rm", "install", "sync", "help", "lint", "upgrade")]$pipcommand,
+      [ValidateSet("sca", "coverage", "activate", "rm", "install", "sync", "help", "lint", "upgrade", "audit")]$pipcommand,
       $pyversion
   )
 
@@ -148,6 +158,11 @@ function mamba {
   if ($pipcommand -eq "lint") {
     uvx ruff format
     uvx ruff check --fix
+    return
+  }
+
+  if ($pipcommand -eq "audit") {
+    uv_run_audit
     return
   }
 
