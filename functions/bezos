@@ -4,7 +4,7 @@ function bezos {
 
 
     # Available commands
-    allowedcommands=("login" "bastion" "creds" "cp")
+    allowedcommands=("login" "bastion" "creds" "cp" "list")
 
     # Check if the variable is in the list
     found=false
@@ -38,20 +38,25 @@ function bezos {
 
     fi
 
-    if [[ $awsaction == 'bastion' ]]; then;
-        bastionfile="${HOME}/bastion.json"
-        bastioncommand=${2?:"Bastion subcommand is required as either a configuration name or list to view all available."}
-        if [[ $bastioncommand == 'list' ]]; then;
-            if [[ -f $bastionfile ]]; then;
-                echo "Available Bastions"
-                jq 'keys' $bastionfile
-                return
-            fi
-            echo "Bastion Configuration Not Present"
+    bastionfile="${HOME}/bastion.json"
+    if [[ $awsaction == 'list' ]]; then;
+        echo "Available Bastions"
+        jq 'keys' $bastionfile
+        return
+    fi
+
+    if [[ $awsaction == 'bastion' ]]; then;        
+        bastioncommand=${2?:"Bastion name is required"}
+
+        if jq -e --arg clustername "$bastioncommand" 'has($clustername)' "$bastionfile" > /dev/null; then;
+        
+        else
+            echo "$bastioncommand is not present in configuration"
+            jq 'keys' $bastionfile
             return
         fi
 
-        
+
         echo "Connecting to Basion ${bastioncommand}"
 
         config=$(jq --arg key "$bastioncommand" '.[$key]' $bastionfile)

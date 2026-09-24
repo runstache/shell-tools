@@ -1,22 +1,18 @@
-#compdef _bezos bezos
+#compdef bezos
 
 _bezos() {
-    local state
     _arguments -C \
-        '1: :->cmd' \
-        '2: :->scmd' \
-        '*: :->args'
-
-
-    case $state in
-        (cmd) _arguments '1:cmds:(login creds bastion)' ;;
-        (scmd) compadd "$@" $(_bezos_bastion ${words[2]});;
-    esac
+        '1:action:(login creds bastion list)' \
+        '2:cluster:_bezos_bastion' 
    
 }
 
 _bezos_bastion(){
-    if [[ "${1}" == "bastion" ]]; then
-        echo list
-    fi
+  local bastionfile="${HOME}/bastion.json"
+  local -a clusters
+     
+  clusters=("${(@f)$(jq -r 'keys[]' "$bastionfile" 2>/dev/null)}")
+  compadd -- "${clusters[@]}"
 }
+
+_bezos "$@"

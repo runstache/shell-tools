@@ -1,7 +1,6 @@
 #compdef hat
 
 _hat() {
-    local state
     _arguments -C \
         '1:action:(login token list)' \
         '2:cluster:_hat_clusters' 
