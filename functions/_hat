@@ -1,0 +1,20 @@
+#compdef hat
+
+_hat() {
+    local state
+    _arguments -C \
+        '1:action:(login token list)' \
+        '2:cluster:_hat_clusters' 
+   
+}
+
+_hat_clusters(){
+  local clusterfile="${HOME}/clusters.json"
+  local -a clusters
+     
+  clusters=("${(@f)$(jq -r 'keys[]' "$clusterfile" 2>/dev/null)}")
+  compadd -- "${clusters[@]}"
+
+}
+
+_hat "$@"

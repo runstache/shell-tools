@@ -1,0 +1,60 @@
+function hat() {
+  local hataction=${1?:'Hat Action required'}\
+
+
+  allowedcommands=("login" "token" "list")
+  clusterfile="${HOME}/clusters.json"
+  
+  found=false
+  for item in "${allowedcommands[@]}"; do
+      if [[ "$hataction" == "$item" ]]; then
+          found=true
+          break
+      fi
+  done
+  # Check the command is in the list
+  if $found; then;
+
+  else
+      echo "$hataction is not a valid command"
+      return
+  fi
+
+  if [[ $hataction == 'list' ]]; then;
+    jq 'keys' $clusterfile
+    return
+  fi
+
+  if [[ $hataction == 'token' ]]; then;
+    context=$(oc config current-context)
+    echo "Current Context: $context"
+    echo
+    oc whoami -t
+    return
+  fi
+
+  clustername=${2?:"Cluster Name is required."}
+  if jq -e --arg clustername "$clustername" 'has($clustername)' "$clusterfile" > /dev/null; then;
+  
+  else
+    echo "$clustername is not present in configuration"
+    jq 'keys' $clusterfile
+    return
+  fi
+
+  apihost=$(jq -r --arg key "$clustername" '.[$key].api' "$clusterfile")
+  docker=$(jq -r --arg key "$clustername" '.[$key].docker' "$clusterfile")
+  if [[ $hataction == 'login' ]]; then;
+    read -r "user?Username: "
+    oc login "$apihost" -u $user
+
+    token=$(oc whoami -t)
+    oc project ${OC_PROJECT}
+    docker login -u "$user" -p "$token" "$docker"
+    return
+  fi
+
+
+
+
+}
