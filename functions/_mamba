@@ -1,25 +1,25 @@
-#compdef _mamba mamba
+#compdef mamba
 
 _mamba() {
     local state
 
-     _arguments -C \
+    _arguments -C \
         '1: :->cmd' \
         '2: :->scmd' \
         '*: :->args'
 
-
     case $state in
-        (cmd) _arguments '1:cmds:(install sync rm activate sca coverage lint upgrade audit)' ;;
+        (cmd) _arguments '1:cmd:(install sync rm activate sca coverage lint upgrade audit)' ;;
         (scmd) compadd "$@" $(_mamba_install ${words[2]});;
     esac
-   
 }
 
 _mamba_install(){
-    if [[ "${1}" == "install" ]]; then
+    if [[ "${1}" == "install" || "${1}" == "sync" ]]; then
         echo 'sca'
         echo 'cdk'
         echo 'hooks'
     fi
 }
+
+_mamba "$@"
